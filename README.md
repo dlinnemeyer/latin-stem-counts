@@ -2,8 +2,13 @@ Quick command line wrapper around whittackers words (http://archives.nd.edu/word
 We could also try to download the linux version of words, but the link I found
 was broken.
 
+Immediate TODO:
 
-Improvements needed:
+ * fix lookup. we take the first line as the inflected form, but that doesn't work for cases where a given inflected form has multiple possibilties for a single stem (e.g. dei could be nominative plural or genitive singular deus). probably read lines until the first word (with "." removed) no longer equals the raw inflected form? those are the possibilities?
+ * switch to stem-based counts. The current code works to get stem for each inflected form. Just create a new counter based on stem. Can store stuff in some global dictionary as we go that sort of acts like our future file-based database.
+
+
+General Improvements needed:
 
  * Switch to command line version of WW. try this: https://github.com/mk270/whitakers-words.
    * I got this running locally with dnf install gprbuild gcc-gnat
