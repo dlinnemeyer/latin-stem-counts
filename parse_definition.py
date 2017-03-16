@@ -55,7 +55,7 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
                 "Multi-line latin definition found {} in {}".format(
                     latin_stem, chunk))
 
-        pairs.append[(inflections, latin_stem[0])]
+        pairs.append((inflections, latin_stem[0]))
 
     # return all the inflection/latin_stem pairs
     return map(lambda pair: PossibleStem(
@@ -65,7 +65,7 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
 
 
 def get_definition(raw_definition: str) -> Definition:
-    _def = raw_definition.split("\n")
+    _def = list(filter(lambda line: line != "", raw_definition.split("\n")))
     possible_stems = []
 
     while len(_def) > 0:

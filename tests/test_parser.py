@@ -1,5 +1,6 @@
 import unittest
 from parse_definition import is_inflected_form, is_latin_stem, get_definition
+from type_defs import Stem, PossibleStem
 
 inflecteds = [
     "femin.a              ADJ    1 1 NOM S F POS",
@@ -74,7 +75,20 @@ class TestParser(unittest.TestCase):
                 "{} should not be a stem".format(should_not))
 
     def test_get_definition(self):
-        propheta_by_line = propheta_definition.split("\n")
-        propheta_noun_english = propheta_by_line[7]
+        by_line = list(filter(
+            lambda line: line != "",
+            propheta_definition.split("\n")))
         self.assertEqual(get_definition(propheta_definition), [
+            PossibleStem(
+                inflections=by_line[:3],
+                stem=Stem(latin=by_line[3], english=by_line[7])
+            ),
+            PossibleStem(
+                inflections=by_line[4:6],
+                stem=Stem(latin=by_line[6], english=by_line[7])
+            ),
+            PossibleStem(
+                inflections=[by_line[8]],
+                stem=Stem(latin=by_line[9], english=by_line[10])
+            )
         ])
