@@ -5,10 +5,10 @@ was broken.
 Immediate TODO:
 
  * fix get_definition to handle multiple stems, and multiple inflections per stem. (e.g. propheta, both a noun and a verb, with two possible nouns, and multiple inflections for each noun)
-   * fix Definition type to handle multiple inflections and multiple stems
-   * fix get_definition to return new type
-   * fix get_definition to handle cases where multiple stems share an english definition (propheta and prophetes both have an english definition after prophetes)
-   * add test for get_definition.
+   * DONE: fix Definition type to handle multiple inflections and multiple stems
+   * DONE: fix get_definition to return new type
+   * DONE: fix get_definition to handle cases where multiple stems share an english definition (propheta and prophetes both have an english definition after prophetes)
+   * DONE: add test for get_definition.
    * fix other types, as needed.
    * fix run.py. update test and make sure the short text in texts/ provides a useful test case for this
  * test with long output from CLI WW to make sure our definitions aren't getting cut off by the CONTINUE prompt?
