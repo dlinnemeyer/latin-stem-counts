@@ -1,5 +1,5 @@
 import unittest
-from parse_definition import is_inflected_form, is_stem, get_definition
+from parse_definition import is_inflected_form, is_latin_stem, get_definition
 
 inflecteds = [
     "femin.a              ADJ    1 1 NOM S F POS",
@@ -30,6 +30,21 @@ neither = [
     "prophesy, foretell, predict;",
 ]
 
+propheta_definition = """
+prophet.a            N      1 1 NOM S M
+prophet.a            N      1 1 VOC S M
+prophet.a            N      1 1 ABL S M
+propheta, prophetae  N (1st) M   [XEXBO]
+prophet.a            N      1 7 VOC S M
+prophet.a            N      1 7 ABL S M
+prophetes, prophetae  N M   [DEXCS]    Late
+prophet; spokesman/interpreter of a god; foreteller, soothsayer (L+S);
+prophet.a            V      1 1 PRES ACTIVE  IMP 2 S
+propheto, prophetare, prophetavi, prophetatus  V (1st)   [EEXCS]    Later
+prophesy, foretell, predict;
+
+"""
+
 
 class TestParser(unittest.TestCase):
 
@@ -47,16 +62,19 @@ class TestParser(unittest.TestCase):
                 is_inflected_form(should_not),
                 "{} should not be an inflected form".format(should_not))
 
-    def test_is_stem(self):
+    def test_is_latin_stem(self):
         for stem in stems:
             self.assertTrue(
-                is_stem(stem),
+                is_latin_stem(stem),
                 "{} should be a stem".format(stem))
 
         for should_not in inflecteds + neither:
             self.assertFalse(
-                is_stem(should_not),
+                is_latin_stem(should_not),
                 "{} should not be a stem".format(should_not))
 
     def test_get_definition(self):
-        pass
+        propheta_by_line = propheta_definition.split("\n")
+        propheta_noun_english = propheta_by_line[7]
+        self.assertEqual(get_definition(propheta_definition), [
+        ])

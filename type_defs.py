@@ -3,18 +3,27 @@ from typing import NamedTuple, List
 # NewType these?
 Word = str
 Count = int
-Stem = str
 Inflection = str
+
+# just a latin stem line plus a potential multi-line english definition.
+# We may broaden the latin portion to be a tuple of its own with grammatical
+# info, but this is enough for now
+Stem = NamedTuple('Stem', [
+    ('latin', str),
+    ('english', str)
+])
 
 RawCount = NamedTuple('RawCount', [
     ('word', Word),
     ('count', Count)
 ])
 
-Definition = NamedTuple('Definition', [
-    ('stem', Stem),
-    ('inflections', List[Inflection])
+PossibleStem = NamedTuple('PossibleStem', [
+    ('inflections', List[Inflection]),
+    ('stem', Stem)
 ])
+
+Definition = List[PossibleStem]
 
 DefinedWord = NamedTuple('DefinedWord', [
     ('raw_count', RawCount),
