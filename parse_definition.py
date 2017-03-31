@@ -8,11 +8,11 @@ def _is_match(regex, s):
 
 
 def is_inflected_form(s):
-    return _is_match("^[a-zA-Z\.]+\s{2,20}[A-Z]+\s{2,8}.*$", s)
+    return _is_match('^[a-zA-Z\.]+\s{2,20}[A-Z]{1,8}[a-zA-Z0-9 ]*$', s)
 
 
 def is_latin_stem(s):
-    return _is_match("^[a-zA-Z\., ]+\s+[A-Za-z0-9\(\) ]+\s+\[[A-Z]{5}\].*$", s)
+    return _is_match('^[a-zA-Z0-9\.,\-\(\) ]+\s+\[[A-Z]{5}\].*$', s)
 
 
 def is_english_line(s):
@@ -46,27 +46,43 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
         if len(inflections) == 0:
             raise ValueError("found no inflections for {}".format(_chunk))
 
+        # definition of scriptum has an inflected form after an initial latin
+        # stem. I've only seen this right before an english def, so we should
+        # be able to break out of the loop in this case
         if len(latin_stem) == 0:
-            raise ValueError("latin_stem definition missing after {}".format(
-                inflections))
+            if not len(pairs):
+                raise ValueError(
+                    "latin_stem definition missing after {}".format(
+                        inflections))
+
+            key = len(pairs) - 1
+            pairs[key] = (pairs[key][0] + inflections, pairs[key][1])
+            break
 
         if len(latin_stem) > 1:
             raise ValueError(
                 "Multi-line latin definition found {} in {}".format(
                     latin_stem, chunk))
 
+        # cleanse all the junk now. lots of whitespace from words
         pairs.append((inflections, latin_stem[0]))
 
     # return all the inflection/latin_stem pairs
-    return map(lambda pair: PossibleStem(
-        stem=Stem(latin=pair[1], english="\n".join(_chunk)),
+    return list(map(lambda pair: PossibleStem(
+        stem=Stem(
+            latin=pair[1],
+            english="\n".join(_chunk)
+        ),
         inflections=pair[0]
-    ), pairs)
+    ), pairs))
 
 
 def get_definition(raw_definition: str) -> Definition:
-    _def = list(filter(lambda line: line != "", raw_definition.split("\n")))
-    possible_stems = []
+    _def = list(map(
+        lambda line: line.strip(),
+        filter(lambda line: len(line) > 1, raw_definition.split("\n"))
+    ))
+    possible_stems = []  # type: List[PossibleStem]
 
     while len(_def) > 0:
         chunk_stems, _def = split_by(

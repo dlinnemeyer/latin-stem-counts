@@ -19,8 +19,8 @@ RawCount = NamedTuple('RawCount', [
 ])
 
 PossibleStem = NamedTuple('PossibleStem', [
-    ('inflections', List[Inflection]),
-    ('stem', Stem)
+    ('stem', Stem),
+    ('inflections', List[Inflection])
 ])
 
 Definition = List[PossibleStem]

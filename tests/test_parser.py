@@ -15,6 +15,9 @@ inflecteds = [
     "prophet.a            N      1 7 VOC S M",
     "prophet.a            N      1 7 ABL S M",
     "prophet.a            V      1 1 PRES ACTIVE  IMP 2 S",
+    "sicut                ADV    POS  ",
+    "sicut                CONJ",
+    "script.um            SUPINE 3 1 ACC S N"
 ]
 
 stems = [
@@ -23,6 +26,9 @@ stems = [
     "propheta, prophetae  N (1st) M   [XEXBO]",
     "prophetes, prophetae  N M   [DEXCS]    Late",
     "propheto, prophetare, prophetavi, prophetatus  V (1st)   [EEXCS]    Late",
+    "edo, esse, -, -  V TRANS   [XXXCO]",
+    "sicut  ADV   [XXXAX]",
+    "scribo, scribere, scripsi, scriptus  V (3rd)   [XXXAX]",
 ]
 
 neither = [
@@ -46,6 +52,34 @@ prophesy, foretell, predict;
 
 """
 
+est_definition = """
+es.t                 V      7 3 PRES ACTIVE  IND 3 S      Early
+edo, esse, -, -  V TRANS   [XXXCO]
+eat/consume/devour; eat away (fire/water/disease); destroy; spend money on food
+.est                 V      5 1 PRES ACTIVE  IND 3 S
+sum, esse, fui, futurus  V   [XXXAX]
+be; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL
+
+"""
+
+scriptum_definition = """
+script.um            VPAR   3 1 NOM S N PERF PASSIVE PPL
+script.um            VPAR   3 1 VOC S N PERF PASSIVE PPL
+script.um            VPAR   3 1 ACC S M PERF PASSIVE PPL
+script.um            VPAR   3 1 ACC S N PERF PASSIVE PPL
+scribo, scribere, scripsi, scriptus  V (3rd)   [XXXAX]
+script.um            SUPINE 3 1 ACC S N
+write; compose;
+script.um            N      2 2 NOM S N
+script.um            N      2 2 VOC S N
+script.um            N      2 2 ACC S N
+scriptum, scripti  N (2nd) N   [XXXDX]    lesser
+something written; written communication; literary work;
+script.um            N      4 1 ACC S M
+scriptus, scriptus  N (4th) M   [XXXDS]    lesser
+scribe's office; being a clerk;
+*
+"""
 
 class TestParser(unittest.TestCase):
 
@@ -74,10 +108,11 @@ class TestParser(unittest.TestCase):
                 is_latin_stem(should_not),
                 "{} should not be a stem".format(should_not))
 
-    def test_get_definition(self):
+    def test_propheta(self):
         by_line = list(filter(
             lambda line: line != "",
             propheta_definition.split("\n")))
+
         self.assertEqual(get_definition(propheta_definition), [
             PossibleStem(
                 inflections=by_line[:3],
@@ -90,5 +125,41 @@ class TestParser(unittest.TestCase):
             PossibleStem(
                 inflections=[by_line[8]],
                 stem=Stem(latin=by_line[9], english=by_line[10])
+            )
+        ])
+
+    def test_est(self):
+        by_line = list(filter(
+            lambda line: line != "",
+            est_definition.split("\n")))
+
+        self.assertEqual(get_definition(est_definition), [
+            PossibleStem(
+                inflections=by_line[:1],
+                stem=Stem(latin=by_line[1], english=by_line[2])
+            ),
+            PossibleStem(
+                inflections=by_line[3:4],
+                stem=Stem(latin=by_line[4], english=by_line[5])
+            )
+        ])
+
+    def test_scriptum(self):
+        by_line = list(filter(
+            lambda line: line != "",
+            scriptum_definition.split("\n")))
+
+        self.assertEqual(get_definition(scriptum_definition), [
+            PossibleStem(
+                inflections=by_line[:4] + [by_line[5]],
+                stem=Stem(latin=by_line[4], english=by_line[6])
+            ),
+            PossibleStem(
+                inflections=by_line[7:10],
+                stem=Stem(latin=by_line[10], english=by_line[11])
+            ),
+            PossibleStem(
+                inflections=[by_line[12]],
+                stem=Stem(latin=by_line[13], english=by_line[14])
             )
         ])

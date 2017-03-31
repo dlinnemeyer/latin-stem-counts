@@ -12,20 +12,6 @@ TOP_X_WORDS = 5
 PATH_TO_WORDS = "/home/dlinnemeyer/whitakers-words"
 
 
-def run(text: Iterable[str]) -> List[StemCount]:
-    raw_counts = get_raw_counts(text)
-    pprint(raw_counts)
-
-    defined_words = list(map(define_word, raw_counts))
-
-    stem_counts = get_stem_counts(defined_words)
-
-    for stem_count in stem_counts:
-        print_namedtuple(stem_count)
-
-    return stem_counts
-
-
 def get_raw_counts(lines: Iterable[str]) -> List[RawCount]:
     words = Counter()  # type: ignore
     for line in map(cleanse, lines):
@@ -44,23 +30,31 @@ def define_word(raw_count: RawCount) -> DefinedWord:
 
 
 def get_stem_counts(defined_words: List[DefinedWord]) -> List[StemCount]:
-    # first, just key defined words to stem
-    stems = {}  # type: Dict[Stem, List[DefinedWord]]
+    # map latin stems to all the defined words that reference it. A single
+    # defined words has multiple possible stems, so it'll go in multiple
+    # places potentially. Also, Stems are unhashable, so need a dict mapping
+    # stem.latin to defined words, then latin to Stem
+    stem_words = {}  # type: Dict[str, List[DefinedWord]]
+    stems = {}  # type: Dict[str, Stem]
     for defined_word in defined_words:
-        stem = defined_word.definition.stem
-        stems[stem] = stems.get(stem, []) + [defined_word]
+        for possible_stem in defined_word.definition:
+            latin = possible_stem.stem.latin
+            if latin not in stems:
+                stem_words[latin] = []
+                stems[latin] = possible_stem.stem
 
-    # translate into StemCount
+            stem_words[latin] += [defined_word]
+
     return [
         StemCount(
-            stem=stem,
+            stem=stems[stem_latin],
             defined_words=defined_words,
             count=sum(map(
                 lambda defined_word: defined_word.raw_count.count,
                 defined_words
             ))
         )
-        for stem, defined_words in stems.items()
+        for stem_latin, defined_words in stem_words.items()
     ]
 
 
@@ -103,6 +97,19 @@ def lookup(word: str) -> Definition:
         "cd {} && bin/words {}".format(PATH_TO_WORDS, word)
     ))
 
+
+def run(text: Iterable[str]) -> List[StemCount]:
+    raw_counts = get_raw_counts(text)
+    pprint(raw_counts)
+
+    defined_words = list(map(define_word, raw_counts))
+
+    stem_counts = get_stem_counts(defined_words)
+
+    for stem_count in stem_counts:
+        print_namedtuple(stem_count)
+
+    return stem_counts
 
 if __name__ == '__main__':
     run(sys.stdin)
