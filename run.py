@@ -1,14 +1,14 @@
 #!/usr/bin/python3
+from operator import attrgetter
 import sys
 from collections import Counter
 from typing import Iterable, List, Dict  # NOQA
 import string
 import subprocess
-from pprint import pprint
 from parse_definition import get_definition
 from type_defs import StemCount, RawCount, DefinedWord, Definition, Stem  # NOQA
 
-TOP_X_WORDS = 5
+TOP_X_WORDS = 7
 PATH_TO_WORDS = "/home/dlinnemeyer/whitakers-words"
 
 
@@ -19,7 +19,7 @@ def get_raw_counts(lines: Iterable[str]) -> List[RawCount]:
 
     return [
         RawCount(word=word, count=count)
-        for word, count in words.most_common(TOP_X_WORDS)
+        for word, count in words.items()
     ]
 
 
@@ -58,23 +58,15 @@ def get_stem_counts(defined_words: List[DefinedWord]) -> List[StemCount]:
     ]
 
 
-# cuz default pprint of namedtuples is a bit ugly
-def print_namedtuple(x):
-    pprint(namedtuple_to_dict(x))
-
-
-def namedtuple_to_dict(x):
-    if not is_namedtuple(x):
-        return x
-
-    return {
-        k: (
-            list(map(namedtuple_to_dict, v))
-            if isinstance(v, list) else
-            namedtuple_to_dict(v)
-        )
-        for k, v in x._asdict().items()
-    }
+def print_stem_count(stem_count):
+    print("{} {} [forms: {}]".format(
+        stem_count.count,
+        stem_count.stem.latin,
+        ", ".join(map(
+            lambda defined_word: defined_word.raw_count.word,
+            stem_count.defined_words
+        ))
+    ))
 
 
 # this is probably bad, but it's a start
@@ -100,14 +92,17 @@ def lookup(word: str) -> Definition:
 
 def run(text: Iterable[str]) -> List[StemCount]:
     raw_counts = get_raw_counts(text)
-    pprint(raw_counts)
 
     defined_words = list(map(define_word, raw_counts))
 
-    stem_counts = get_stem_counts(defined_words)
+    stem_counts = sorted(
+        get_stem_counts(defined_words),
+        key=attrgetter('count'),
+        reverse=True
+    )[:TOP_X_WORDS]
 
     for stem_count in stem_counts:
-        print_namedtuple(stem_count)
+        print_stem_count(stem_count)
 
     return stem_counts
 
