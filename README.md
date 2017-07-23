@@ -9,10 +9,13 @@ Immediate TODO:
    * DONE: fix get_definition to return new type
    * DONE: fix get_definition to handle cases where multiple stems share an english definition (propheta and prophetes both have an english definition after prophetes)
    * DONE: add test for get_definition.
-   * fix other types, as needed.
-   * fix run.py. update test and make sure the short text in texts/ provides a useful test case for this
+   * DONE: fix other types, as needed.
+   * DONE: fix run.py. update test and make sure the short text in texts/ provides a useful test case for this
+ * get test passing with idem aliquem quod quidem quisque
+   * make run_short working
+   * add test for -dem or -que words
+ * add csv output for Latin Word / English Def / Frequency / Part of Speech
  * test with long output from CLI WW to make sure our definitions aren't getting cut off by the CONTINUE prompt?
- * Switch TOP_X_WORDS to be a parameter, and to apply to stems, not raw words
 
 
 General Improvements needed:

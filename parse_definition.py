@@ -33,7 +33,7 @@ def split_by(pred, seq):
 
 
 # definition chunks are basically WW output, split by english defs. This groups
-# multiple possible stems under a single english def, hend the list of
+# multiple possible stems under a single english def, hence the list of
 # possible stems as the return value (e.g. propheta's first two noun entries
 # as an example of multiple stems with the same english definition)
 def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
@@ -77,11 +77,24 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
     ), pairs))
 
 
+# exclude 'problem' lines that might be parseable at some point, but we're
+# ignoring for now
+# NOTE: an alternative to this -que thing could just be to remove que from
+# incoming words
+def is_problem_line(line):
+    return any(x in line for x in ['TACKON', 'PACK']) or line.startswith('-que')
+
+
+def cleanse_raw_definition(raw_definition: str) -> List[str]:
+    return [
+        line.strip()
+        for line in raw_definition.split("\n")
+        if len(line) > 1 and not is_problem_line(line)
+    ]
+
+
 def get_definition(raw_definition: str) -> Definition:
-    _def = list(map(
-        lambda line: line.strip(),
-        filter(lambda line: len(line) > 1, raw_definition.split("\n"))
-    ))
+    _def = cleanse_raw_definition(raw_definition)
     possible_stems = []  # type: List[PossibleStem]
 
     while len(_def) > 0:

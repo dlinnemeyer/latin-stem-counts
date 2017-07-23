@@ -81,6 +81,54 @@ scribe's office; being a clerk;
 *
 """
 
+idem_definition = """
+dem                  TACKON
+TACKON w/i-ea-id   idem => same;
+i                    PRON   4 2 NOM S M
+i                    PRON   4 2 NOM S N
+i                    PRON   4 2 ACC S N
+idem, eadem, idem  PRON   [XXXAX]
+(w/-dem ONLY, idem, eadem, idem) same, the same, the very same, also;
+
+"""
+
+quisque_definition = """
+que                  TACKON
+PACKON w/qui => whoever it be; whatever; each, each one; everyone, everything;
+qu.is                PRON   1 0 DAT P X
+qu.is                PRON   1 0 ABL P X
+qu  PACK   [XXXAX]
+(w/-que) each, each one; every, everybody, everything (more than 2); whatever;
+(w/-que) any; each;
+qu.is                PRON   1 0 NOM S C
+(w/-que) each, each one; every, everybody, everything (more than 2); whatever;
+que                  TACKON
+-que = and (enclitic, translated before attached word); completes plerus/uter;
+qu.is                PRON   1 0 DAT P X
+qu.is                PRON   1 0 ABL P X
+who; that; which, what; of which kind/degree; person/thing/time/point that;
+who/what/which?, what/which one/man/person/thing? what kind/type of?;
+who/whatever, everyone who, all that, anything that;
+any; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);
+who?, which?, what?; what kind of?;
+qu.is                PRON   1 0 NOM S C
+who/what/which?, what/which one/man/person/thing? what kind/type of?;
+anyone/anybody/anything; whoever you pick; something (or other); any (NOM S);
+qui.s                V      6 1 PRES ACTIVE  IND 2 S
+queo, quire, quivi(ii), quitus  V   [XXXBX]
+be able;
+que                  TACKON
+PACKON w/qui => whoever it be; whatever; each, each one; everyone, everything;
+qu.is                PRON   1 0 DAT P X
+qu.is                PRON   1 0 ABL P X
+qu  PACK   [XXXAX]
+(w/-que) each, each one; every, everybody, everything (more than 2); whatever;
+(w/-que) any; each;
+qu.is                PRON   1 0 NOM S C
+(w/-que) each, each one; every, everybody, everything (more than 2); whatever;
+
+"""
+
 class TestParser(unittest.TestCase):
 
     def setUp(self):
@@ -150,6 +198,26 @@ class TestParser(unittest.TestCase):
             scriptum_definition.split("\n")))
 
         self.assertEqual(get_definition(scriptum_definition), [
+            PossibleStem(
+                inflections=by_line[:4] + [by_line[5]],
+                stem=Stem(latin=by_line[4], english=by_line[6])
+            ),
+            PossibleStem(
+                inflections=by_line[7:10],
+                stem=Stem(latin=by_line[10], english=by_line[11])
+            ),
+            PossibleStem(
+                inflections=[by_line[12]],
+                stem=Stem(latin=by_line[13], english=by_line[14])
+            )
+        ])
+
+    def test_idem(self):
+        by_line = list(filter(
+            lambda line: line != "",
+            idem_definition.split("\n")))
+
+        self.assertEqual(get_definition(idem_definition), [
             PossibleStem(
                 inflections=by_line[:4] + [by_line[5]],
                 stem=Stem(latin=by_line[4], english=by_line[6])
