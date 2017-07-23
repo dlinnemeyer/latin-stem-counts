@@ -49,12 +49,7 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
         # definition of scriptum has an inflected form after an initial latin
         # stem. I've only seen this right before an english def, so we should
         # be able to break out of the loop in this case
-        if len(latin_stem) == 0:
-            if not len(pairs):
-                raise ValueError(
-                    "latin_stem definition missing after {}".format(
-                        inflections))
-
+        if len(latin_stem) == 0 and len(pairs):
             key = len(pairs) - 1
             pairs[key] = (pairs[key][0] + inflections, pairs[key][1])
             break
@@ -65,7 +60,7 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
                     latin_stem, chunk))
 
         # cleanse all the junk now. lots of whitespace from words
-        pairs.append((inflections, latin_stem[0]))
+        pairs.append((inflections, latin_stem[0] if len(latin_stem) else ""))
 
     # return all the inflection/latin_stem pairs
     return list(map(lambda pair: PossibleStem(
