@@ -1,6 +1,6 @@
 import re
 from typing import List
-from type_defs import Definition, PossibleStem, Stem
+from type_defs import Definition, PossibleStem, Stem, ParsedStem
 
 
 def _is_match(regex, s):
@@ -66,18 +66,34 @@ def process_definition_chunk(chunk: List[str]) -> List[PossibleStem]:
     return list(map(lambda pair: PossibleStem(
         stem=Stem(
             latin=pair[1],
+            parsed=parse_stem(pair[1]),
             english="\n".join(_chunk)
         ),
         inflections=pair[0]
     ), pairs))
 
 
+def parse_stem(latin: str) -> ParsedStem:
+    # TODO: add conditional parseing based on part of speech to get more info
+    # about verbs, nouns, etc.
+    m = re.match(r"^(.*)  (\w+) .*$", latin)
+    if m is None:
+        return ParsedStem(
+            part_of_speech=None,
+            core_stem=None
+        )
+
+    core_stem, part_of_speech = m.groups()
+    return ParsedStem(
+        part_of_speech=part_of_speech,
+        core_stem=core_stem
+    )
+
+
 # exclude 'problem' lines that might be parseable at some point, but we're
 # ignoring for now
-# NOTE: an alternative to this -que thing could just be to remove que from
-# incoming words
 def is_problem_line(line):
-    return any(x in line for x in ['TACKON', 'PACK']) or line.startswith('-que')
+    return any(x in line for x in ['TACKON', 'PACKON']) or line.startswith('-que')
 
 
 def cleanse_raw_definition(raw_definition: str) -> List[str]:

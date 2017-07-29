@@ -225,22 +225,40 @@ class TestParser(unittest.TestCase):
         ])
 
 
-    # def test_quisque(self):
-    #     by_line = list(filter(
-    #         lambda line: line != "",
-    #         quisque_definition.split("\n")))
+    def test_quisque(self):
+        by_line = list(filter(
+            lambda line: line != "",
+            quisque_definition.split("\n")))
 
-    #     self.assertEqual(get_definition(quisque_definition), [
-    #         PossibleStem(
-    #             inflections=by_line[:4] + [by_line[5]],
-    #             stem=Stem(latin=by_line[4], english=by_line[6])
-    #         ),
-    #         PossibleStem(
-    #             inflections=by_line[7:10],
-    #             stem=Stem(latin=by_line[10], english=by_line[11])
-    #         ),
-    #         PossibleStem(
-    #             inflections=[by_line[12]],
-    #             stem=Stem(latin=by_line[13], english=by_line[14])
-    #         )
-    #     ])
+        join_eng = lambda lines: "\n".join(lines)
+
+        self.assertEqual(get_definition(quisque_definition), [
+            PossibleStem(
+                inflections=by_line[2:4],
+                stem=Stem(latin=by_line[4], english=join_eng(by_line[5:7]))
+            ),
+            PossibleStem(
+                inflections=[by_line[7]],
+                stem=Stem(latin="", english=by_line[8])
+            ),
+            PossibleStem(
+                inflections=by_line[11:13],
+                stem=Stem(latin="", english=join_eng(by_line[13:18]))
+            ),
+            PossibleStem(
+                inflections=[by_line[18]],
+                stem=Stem(latin="", english=join_eng(by_line[19:21]))
+            ),
+            PossibleStem(
+                inflections=[by_line[21]],
+                stem=Stem(latin=by_line[22], english=by_line[23])
+            ),
+            PossibleStem(
+                inflections=by_line[26:28],
+                stem=Stem(latin=by_line[28], english=join_eng(by_line[29:31]))
+            ),
+            PossibleStem(
+                inflections=[by_line[31]],
+                stem=Stem(latin="", english=by_line[32])
+            )
+        ])

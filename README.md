@@ -4,18 +4,25 @@ was broken.
 
 Immediate TODO:
 
- * fix get_definition to handle multiple stems, and multiple inflections per stem. (e.g. propheta, both a noun and a verb, with two possible nouns, and multiple inflections for each noun)
+ * DONE: fix get_definition to handle multiple stems, and multiple inflections per stem. (e.g. propheta, both a noun and a verb, with two possible nouns, and multiple inflections for each noun)
    * DONE: fix Definition type to handle multiple inflections and multiple stems
    * DONE: fix get_definition to return new type
    * DONE: fix get_definition to handle cases where multiple stems share an english definition (propheta and prophetes both have an english definition after prophetes)
    * DONE: add test for get_definition.
    * DONE: fix other types, as needed.
    * DONE: fix run.py. update test and make sure the short text in texts/ provides a useful test case for this
- * get test passing with idem aliquem quod quidem quisque
-   * make run_short working
-   * add test for -dem or -que words
- * add csv output for Latin Word / English Def / Frequency / Part of Speech
- * test with long output from CLI WW to make sure our definitions aren't getting cut off by the CONTINUE prompt?
+ * DONE: get test passing with idem aliquem quod quidem quisque
+   * DONE: make run_short working
+   * DONE: add test for -dem or -que words
+ * DONE: add csv output
+ * DONE: add part of speech to stem and to output
+ * cleanup tests and get passing
+   * part of speech broke them. just make test_parser ignore parsed part of Stem somehow. it's not relevant to that.
+   * add unit tests in test_basics (or maybe parser?) to test parse_stem. We'll want a separate set of tests to know we can convert latin stem text to ParsedStem, which a good handful of examples.
+ * remove is_problem_line
+   * we should be able to parse whatever WW gives us. at least return some Stem data structure
+   * later on, we can remove Stems/Definitions that are missing certain core pieces and emit
+     warnings (e.g. if no latin stem, remove; if no inflections and only a stem, remove?)
 
 
 General Improvements needed:

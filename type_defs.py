@@ -5,11 +5,14 @@ Word = str
 Count = int
 Inflection = str
 
-# just a latin stem line plus a potential multi-line english definition.
-# We may broaden the latin portion to be a tuple of its own with grammatical
-# info, but this is enough for now
+ParsedStem = NamedTuple('ParsedStem', [
+    ('part_of_speech', str),
+    ('core_stem', str) # the scribo, scribere part; must be a name for this?
+])
+
 Stem = NamedTuple('Stem', [
     ('latin', str),
+    ('parsed', ParsedStem),
     ('english', str)
 ])
 
