@@ -8,7 +8,7 @@ import subprocess
 from parse_definition import get_definition
 from type_defs import StemCount, RawCount, DefinedWord, Definition, Stem  # NOQA
 
-TOP_X_WORDS = 7
+TOP_X_WORDS = 1
 PATH_TO_WORDS = "/home/dlinnemeyer/whitakers-words"
 
 

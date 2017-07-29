@@ -219,15 +219,28 @@ class TestParser(unittest.TestCase):
 
         self.assertEqual(get_definition(idem_definition), [
             PossibleStem(
-                inflections=by_line[:4] + [by_line[5]],
-                stem=Stem(latin=by_line[4], english=by_line[6])
-            ),
-            PossibleStem(
-                inflections=by_line[7:10],
-                stem=Stem(latin=by_line[10], english=by_line[11])
-            ),
-            PossibleStem(
-                inflections=[by_line[12]],
-                stem=Stem(latin=by_line[13], english=by_line[14])
+                inflections=by_line[2:5],
+                stem=Stem(latin=by_line[5], english=by_line[6])
             )
         ])
+
+
+    # def test_quisque(self):
+    #     by_line = list(filter(
+    #         lambda line: line != "",
+    #         quisque_definition.split("\n")))
+
+    #     self.assertEqual(get_definition(quisque_definition), [
+    #         PossibleStem(
+    #             inflections=by_line[:4] + [by_line[5]],
+    #             stem=Stem(latin=by_line[4], english=by_line[6])
+    #         ),
+    #         PossibleStem(
+    #             inflections=by_line[7:10],
+    #             stem=Stem(latin=by_line[10], english=by_line[11])
+    #         ),
+    #         PossibleStem(
+    #             inflections=[by_line[12]],
+    #             stem=Stem(latin=by_line[13], english=by_line[14])
+    #         )
+    #     ])
